@@ -1,2 +1,2 @@
 # Convolution
-A python script that does convolution\nMade for my research group
+A python script that does convolution, made for my research group
