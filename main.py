@@ -17,7 +17,7 @@ da_image = 'Salad_256x256.jpg'
 
 def main():
 
-    filtr_size = 3 # since all filters are NxN, write just N
+    filtr_size = 4 # since all filters are NxN, write just N
 
     filtr = average_filter(filtr_size)
     # filtr = []
@@ -27,35 +27,36 @@ def main():
     image.show()
     # output_image = Image.new(mode="RGB", size=(8, 8))
     # output_image.putpixel((1,1),(255,255,255))
-    for i in range(0,9):
+    for i in range(0,1):
         image = convolve(image,filtr)
     
     image.show()
 
 
 def convolve(image, filtr): # the convolution of some image with some filter
-    
     output_image = image.copy()
     image_data = np.asarray(image)
-    for i in range(1,image.size[0]-1): # looping through rows
-        for j in range(1,image.size[1]-1): # looping through columns
+    for i in range(0,image.size[0]-1): # looping through rows
+        for j in range(0,image.size[1]-1): # looping through columns
             pixel_value = []
             for k in range(0,3): # looping through bands (RGB colors)
-                image_segment = [[image_data[i-1][j-1][k], image_data[i][j-1][k], image_data[i+1][j-1][k]],
-                                 [image_data[i-1][j][k]  , image_data[i][j][k]  , image_data[i+1][j][k]],
-                                 [image_data[i-1][j+1][k], image_data[i][j+1][k], image_data[i+1][j+1][k]]]
+                image_segment = []
+                for p in range(round(-len(filtr)/2)-1,round(len(filtr)/2)): # moving through the filter's rows
+                    temp_segment = []
+                    for q in range(round(-len(filtr)/2)-1,round(len(filtr)/2)): # moving through the filter's columns
+                        temp_segment.append(image_data[j+p][i+q][k])
+                    image_segment.append(temp_segment)
+                # print(image_segment)
                 pixel_value.append(total_sum_from_filter(filtr, image_segment))
             pixel_value = tuple(pixel_value)
-
             output_image.putpixel((i,j), pixel_value)
     return output_image
 
+def assemble_image_segement(image, size):
+    image_segment = []
+    for p in range(round(-size/2),round(size/2)):
+        temp_list_item = []
             
-'''
-image_segment = [[image[i-1][j-1], image[i][j-1], image[i+1][j-1]]
-                 [image[i-1][j]  , image[i][j]  , image[i+1][j]]
-                 [image[i-1][j+1], image[i][j+1], image[i+1][j+1]]]
-'''
 
 def total_sum_from_filter(filtr, image_segment): # image segment is going to be the same size as the filter
     sum = 0
